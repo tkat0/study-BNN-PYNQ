@@ -4,7 +4,7 @@ BNN-PYNQの調査結果のまとめ
 
 解説、というほどのものではありませんが、BNN-PYNQについて調べた内容をまとめていきます。
 
-https://tkat0.github.io/doc-BNN-PYNQ/
+https://tkat0.github.io/study-BNN-PYNQ/
 
 # Contributor
 
