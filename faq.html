@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FAQ &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
+        <link rel="prev" title="study-BNN-PYNQ" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> study-BNN-PYNQ
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bnn-pynq">BNN-PYNQってなに？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fpga">学習も推論もFPGAでやるの？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">認識精度は？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pcfpga">PCで動く任意のモデルをFPGA化できるの？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lfccnv">任意のデータで既存のモデル（LFCとCNV）を再学習できるの？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpu">CPUとアクセラレータ間のデータ転送のタイミングは？</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">study-BNN-PYNQ</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>FAQ</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/faq.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="faq">
+<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<p>BNN-PYNQのソースコードは5/2時点で最新のものを使いました。</p>
+<p><a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ/tree/a86e0863418ce4161ed61b69ba89ec1481014362">https://github.com/Xilinx/BNN-PYNQ/tree/a86e0863418ce4161ed61b69ba89ec1481014362</a></p>
+<div class="section" id="bnn-pynq">
+<h2>BNN-PYNQってなに？<a class="headerlink" href="#bnn-pynq" title="Permalink to this headline">¶</a></h2>
+<p>ホビーFPGAボード&#8221;PYNQ(ピンク)&#8221;で動作するNeuralNetworkのシステム。
+行列演算などをハードウェア化することで、DeepLearningアルゴリズムを、CPUより高速化（アクセラレーション）する試みが、至る所で行われています。これもその一種。</p>
+<p>アプリケーションは、例えば以下。</p>
+<p><a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ/blob/master/notebooks/Cifar10.ipynb">https://github.com/Xilinx/BNN-PYNQ/blob/master/notebooks/Cifar10.ipynb</a></p>
+<p>BNN-PYNQは同じNeuralNetworkをCPUとFPGAそれぞれで動かせるようになっていて、「CPUよりFPGA化したほうがこんなに速いよ」という内容が上記でも確認できます。</p>
+<p>BNN-PYNQは、以下のような工夫をして高速化しています。
+詳細は <a class="reference external" href="https://arxiv.org/abs/1612.07119">論文</a> に記載があります。</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>演算精度のバイナリ化（0,1）</dt>
+<dd><ul class="first last">
+<li>メモリの使用量、転送量を削減</li>
+<li>ビット演算器を活用した高速化</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>演算の並列化</li>
+</ul>
+</div>
+<div class="section" id="fpga">
+<h2>学習も推論もFPGAでやるの？<a class="headerlink" href="#fpga" title="Permalink to this headline">¶</a></h2>
+<p>No。学習はPCで行い推論をFPGAで実行する仕組み。</p>
+<p>PCのDeepLeraningフレームワークで学習したモデルを、BNN-PYNQ用のデータフォーマットに変換するスクリプトは付属しています。
+現時点でTheanoで学習したパラメータの変換に対応しているようです。
+サンプルは、Lasagne（Theanoをバックエンドにできる）で記述されています。</p>
+<p>データフォーマットの変換だけなので、ちょいとスクリプトを書けば、TensorFlowやChainerなどとも連携できるはずです。(今度のイベント向けにやってみようかな)</p>
+</div>
+<div class="section" id="id2">
+<h2>認識精度は？<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>付属の学習済みモデルに関する認識率は、ここに記載があります。</p>
+<p><a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/training#training-networks">https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/training#training-networks</a></p>
+<p>バイナリ化しない場合に比べて、GPUでの学習時間がすこし長い印象がありますが、どうなんでしょうか？</p>
+</div>
+<div class="section" id="pcfpga">
+<h2>PCで動く任意のモデルをFPGA化できるの？<a class="headerlink" href="#pcfpga" title="Permalink to this headline">¶</a></h2>
+<p>No。現状はLFCとCNVと呼ばれる2種類のモデルに対応してます。
+例えばLSTMなど含むモデルは動かせません。</p>
+<p>ただし、BNN-PYNQが対応しているレイヤーで構成されるモデルであれば、FPGAのリソースに乗る範囲でレイヤーを組み替えて任意のモデルは作れると思います。</p>
+<p>BNN-PYNQでは、バイナリ化したConvolutionやFullyConnectedレイヤーのハードウェアを使います。
+そのため、PC側もそれに合わせてバイナリ化したレイヤーを定義して学習しないと、学習した重みをFPGAに乗せられません。
+通常のPC側のフレームワークだとfloat(32bit)で計算する部品がほとんどです。
+そのため、BNN-PYNQでは、PCのフレームワーク用にもバイナリ化したレイヤーを定義して、それを用いてモデルを作り、学習しています((元祖 Binarized Neural Networksの論文の実装をベースにしてるぽいですね))。</p>
+<p>もし、ConvolutionやFullyConnected以外を使いたい場合は、ハード側にそのレイヤーを実装するか、そのレイヤーをソフト処理するかだと思います。
+しかし、ソフト処理は現実的ではないと思います。BNN-PYNQは推論開始後、最期のレイヤが計算完了するまで制御がCPUに戻らない仕組みです。そのため、途中の一部のレイヤだけソフト処理にするのはBNN-PYNQのコアの修正が必要で、できたとしても速度が遅くなると思います。
+そのため、追加したいレイヤーのCPUよりも高効率なハードウェアアルゴリズムを考えて、それを高位合成なりでハード化するのが面白いんじゃないでしょうか??</p>
+</div>
+<div class="section" id="lfccnv">
+<h2>任意のデータで既存のモデル（LFCとCNV）を再学習できるの？<a class="headerlink" href="#lfccnv" title="Permalink to this headline">¶</a></h2>
+<p>Yes</p>
+<p>CNV, LFCは それぞれ学習データのフォーマットが決まっているので、それに従い作成したデータなら学習可能です。</p>
+<p>任意のタスクにBNN-PYNQを応用する場合は、まずは既存のネットワーク（LFC,CNV）を使うところから考えるのが良さそうですね。</p>
+</div>
+<div class="section" id="cpu">
+<h2>CPUとアクセラレータ間のデータ転送のタイミングは？<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h2>
+<p>データのコピーが性能上のボトルネックになるので、どのタイミングでコピーしているかは重要です。
+ソースを見ると、以下のタイミングでコピーが発生しているようです。</p>
+<ol class="arabic simple">
+<li>モデル初期化時に、全レイヤーのパラメータをCPUからアクセラレータへコピー</li>
+<li>推論開始時に、入力画像データを、CPUからアクセラレータへコピー</li>
+<li>推論終了時に、推論結果をアクセラレータからCPUへコピー</li>
+</ol>
+<p>推論中は、アクセラレータとメモリ内で閉じて演算しているようです。</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="study-BNN-PYNQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, tkato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
