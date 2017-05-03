@@ -1,4 +1,4 @@
-# doc-BNN-PYNQ
+# study-BNN-PYNQ
 
 BNN-PYNQの調査結果のまとめ
 
