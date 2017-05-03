@@ -8,4 +8,6 @@ https://tkat0.github.io/doc-BNN-PYNQ/
 
 # Contributor
 
-[@\_tkato\_](https://twitter.com/_tkato_)
+@\_tkato\_
+* https://twitter.com/_tkato_
+* http://tkat0.hateblo.jp/
