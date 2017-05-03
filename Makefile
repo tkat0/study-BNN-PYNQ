@@ -1,4 +1,4 @@
-# Minimal makefile for Sphinx documentation
+#g Minimal makefile for Sphinx documentation
 #
 
 # You can set these variables from the command line.
@@ -18,3 +18,6 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+livehtml:
+	@sphinx-autobuild $(SOURCEDIR) $(BUILDDIR)/html
