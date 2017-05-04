@@ -1,0 +1,9 @@
+.social-buttons {
+    padding: 20px;
+	font-size: 0;
+}
+
+.social-button-item {
+    padding: 10px;
+    display: inline-block;
+}
