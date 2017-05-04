@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  <title>ソフトウェア全体像 &mdash; study-BNN-PYNQ 0.1 documentation</title>
   
 
   
@@ -32,7 +32,9 @@
   
 
   
-    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/> 
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
+        <link rel="next" title="ファイル構成" href="tree.html"/>
+        <link rel="prev" title="FAQ" href="faq.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -60,7 +62,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -75,9 +77,9 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ソフトウェア全体像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
@@ -102,7 +104,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -110,8 +112,12 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>ソフトウェア全体像</li>
       <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/soft-overview.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -120,23 +126,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="id1">
+<h1>ソフトウェア全体像<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>BNN-PYNQのソフトウェアの構成を図にしてみました。</p>
+<a class="reference internal image-reference" href="_images/software-overview.png"><img alt="_images/software-overview.png" class="align-center" src="_images/software-overview.png" style="width: 512.0px; height: 384.0px;" /></a>
+<ul>
+<li><dl class="first docutils">
+<dt>青色の箱が、モデル毎に実装するモジュール</dt>
+<dd><ul class="first last simple">
+<li>ソースは、 <a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/network">bnn/src/network</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>緑色の箱は、FINN libraryと呼ばれており、モデルによらず共通</dt>
+<dd><ul class="first last">
+<li><p class="first">ソースは、 <a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/library">bnn/src/library</a></p>
+</li>
+<li><dl class="first docutils">
+<dt>hostは、上位からの呼び出しに対してSW/HWビルドの差異を吸収する</dt>
+<dd><ul class="first last simple">
+<li>ビルド時の定数マクロで、関数を切り替えている</li>
+<li>SWビルドのときは、高位合成対象のCの関数を直接呼ぶ</li>
+<li>HWビルドのときは、driverを介してアクセラレータを制御する</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">driverは、アクセラレータ用のメモリ管理やレジスタ制御を行う</p>
+</li>
+<li><p class="first">hlsは、高位合成時にインクルードされる共通ライブラリ</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tree.html" class="btn btn-neutral float-right" title="ファイル構成" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="faq.html" class="btn btn-neutral" title="FAQ" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -174,7 +215,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -190,14 +230,7 @@
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>
