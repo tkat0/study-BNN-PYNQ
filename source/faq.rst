@@ -1,11 +1,6 @@
 FAQ
 ====
 
-BNN-PYNQのソースコードは5/2時点で最新のものを使いました。
-
-https://github.com/Xilinx/BNN-PYNQ/tree/a86e0863418ce4161ed61b69ba89ec1481014362
-
-
 BNN-PYNQってなに？
 -------------------
 

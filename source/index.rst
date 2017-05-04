@@ -30,41 +30,43 @@ Pythonのアプリケーション層、Cのドライバ、高位合成用の実�
        </div>
    </div><br>
 
+.. note::
+   BNN-PYNQのソースコードは5/2時点で最新のものを使いました。
+
+   https://github.com/Xilinx/BNN-PYNQ/tree/a86e0863418ce4161ed61b69ba89ec1481014362
+
+.. warning::
+   現在、勉強を兼ねてこのページを作成している途中です。
+
+   内容の間違い、ご意見等はGitHubのissueやTwitter等で教えて頂けると助かります。
+
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
    
    faq
-
-資料
----------
-
-* BNN-PYNQ
-    * ソースコード: https://github.com/Xilinx/BNN-PYNQ
-    * 論文: https://arxiv.org/abs/1612.07119
-
-* PYNQ-Z1
-    * プロジェクトページ http://www.pynq.io/
-    * ドキュメント: http://pynq.readthedocs.io/en/latest/
-    * ソースコード: https://github.com/Xilinx/PYNQ/
+   soft-overview
+   tree
+   links
 
 Author
 ------
 
 tkato
-    組み込みソフトエンジニアですが、PythonやRubyが好きです。
+    組み込みソフトエンジニアです。PythonやRubyが好きです。
 
 * Twitter: https://twitter.com/_tkato_
 * Blog: http://tkat0.hateblo.jp/
-
-
-内容に間違いがある場合等、Twitter等で教えて頂けると助かります。
+* GitHub: https://github.com/tkat0
 
 Change log
 -----------
 
+* 2017/05/04
+    * ソフトウェア全体像を追加
+    * ファイル構成を追加
 * 2017/05/03
-    * 新規作成
+    * 新規作成(ブログ記事を元に作成)
     * FAQを追加
 
 
