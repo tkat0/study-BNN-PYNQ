@@ -7,7 +7,7 @@ BNN-PYNQのソフトウェアの構成を図にしてみました。
    :scale: 50%
    :align: center
 
-* 青色の箱が、モデル毎に実装するモジュール
+* 青色の箱が、モデル毎に実装する必要があるモジュール
     * ソースは、 `bnn/src/network <https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/network>`_
 * 緑色の箱は、FINN libraryと呼ばれており、モデルによらず共通
     * ソースは、 `bnn/src/library <https://github.com/Xilinx/BNN-PYNQ/tree/master/bnn/src/library>`_
