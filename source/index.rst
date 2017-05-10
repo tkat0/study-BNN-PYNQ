@@ -10,9 +10,13 @@ study-BNN-PYNQ
 
 BNN-PYNQについて調べた内容をまとめます。
 
-BNN-PYNQは、ホビーFPGAボード"PYNQ(ピンク)"で動作するNeuralNetworkのシステムです。
+主な読み手として、ハードウェアや高位合成に詳しくない、ソフトウェア側の方を意識しています。
 
-Pythonのアプリケーション層、Cのドライバ、高位合成用の実装まで、ほとんどのコードが公開されているためDeepLearningのアルゴリズムをFPGAで動かすことを学ぶには良い素材です。
+* BNN-PYNQは、ホビーFPGAボード"PYNQ(ピンク)"で動作するNeuralNetworkのシステムです
+* DeepLearningのアルゴリズムをFPGAで動かすことを学ぶには良い素材です
+    * 論文が公開
+    * Pythonのアプリケーション層、Cのドライバ、高位合成用の実装が公開
+    * 学習コードの一部が公開
 
 .. SNS連携
 .. raw:: html
@@ -43,10 +47,12 @@ Pythonのアプリケーション層、Cのドライバ、高位合成用の実�
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
+
    faq
    soft-overview
    tree
+   hw
+   hw-implement
    links
 
 Author
@@ -62,6 +68,10 @@ tkato
 Change log
 -----------
 
+* 2017/05/11
+    * ハードウェア概要、ハードウェア実装を追加
+    * ソフトウェアのシーケンスを追加
+    * Todo追加
 * 2017/05/04
     * ソフトウェア全体像を追加
     * ファイル構成を追加
@@ -69,6 +79,22 @@ Change log
     * 新規作成(ブログ記事を元に作成)
     * FAQを追加
 
+Todo
+-----
+
+今後書く予定の内容
+
+* Binarized Neural Networkの説明
+* LFC, CNVの構成、特長
+* HW
+    * レジスタマップ
+    * MVTUのデータフロー詳細
+    * FCとConvolutionでMVTUをどう使っているのか
+    * MVTUのコンパイル時のパラメータの決め方
+* 学習ツールや学習のシーケンス
+    * モデルデータのバイナリフォーマット
+    * 任意のデータで学習するには
+    * 任意のモデルを構築して学習してみる
 
 Indices and tables
 ==================
@@ -88,4 +114,7 @@ Indices and tables
    ga('create', 'UA-98471030-1', 'auto');
    ga('send', 'pageview');
 
-   </script> 
+   </script>
+
+
+.. 図は `mermaid.js <http://knsv.github.io/mermaid/>`_ で作成
