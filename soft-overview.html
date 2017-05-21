@@ -80,7 +80,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ソフトウェア全体像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
 <li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
 
@@ -164,6 +167,67 @@
 </li>
 </ul>
 </div>
+<div class="section" id="id2">
+<h1>ソフトウェアシーケンス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<p>LFCで単一画像を推論する場合のシーケンスは以下のようになっています。</p>
+<ul class="simple">
+<li>シーケンス上、主要と思われるところを記載。</li>
+</ul>
+<script>mermaid.initialize({startOnLoad:true});</script><div class="mermaid">
+            sequenceDiagram
+   participant user
+   participant PynqBNN
+   participant main
+   participant host
+   participant driver
+
+   %% __init__
+   Note over user, driver: ↓初期化。Overlayをロード
+   user-&gt;&gt;PynqBNN: __init__()
+
+   %% load parameter
+   Note over user, driver: ↓モデルの学習済みパラメータのロード
+   user-&gt;&gt;PynqBNN: load_parameters()
+   PynqBNN-&gt;&gt;+main: load_parameters()
+   main-&gt;&gt;host: FoldedMVInit()
+   host-&gt;&gt;driver: initPlatform()
+   Note over host, driver: アクセラレータのレジスタをmemmap
+   loop 全レイヤー
+       main-&gt;&gt;host: FoldedMVLoadLayerMem()
+       host-&gt;&gt;host: FoldedMVMemSet()
+       host-&gt;&gt;driver: レジスタ制御
+       Note over host, driver: 学習済の重みをセット。.binファイルを読み込み、レジスタ経由でアクセラレータへセット
+   end
+   main--&gt;&gt;-PynqBNN: return
+
+   %% inference
+   Note over user, driver: ↓推論処理
+   user-&gt;&gt;PynqBNN: inference()
+   PynqBNN-&gt;&gt;+main: inference()
+   main-&gt;&gt;host: FoldedMVInit()
+   main-&gt;&gt;+host: testPrebinarized_nolabel()
+   host-&gt;&gt;host: binarizeAndPack()
+   host-&gt;&gt;driver: copyBufferHostToAccel()
+   Note over host, driver: 入力データをアクセラレータ側へコピー
+
+   host-&gt;&gt;host: FoldedMVOffloadBinarized()
+   host-&gt;&gt;driver: writeJamRegAddr()
+
+   host-&gt;&gt;host: ExecAccel()
+   Note over host, driver: 実行レジスタをキックし、結果をポーリング
+   host-&gt;&gt;driver: copyBufferAccelToHost()
+   Note over host, driver: 推論結果をソフト側へコピー
+   host--&gt;&gt;-main: return
+   main--&gt;&gt;-PynqBNN: return
+
+   %% __del__
+   Note over user, driver: ↓終了処理(暗黙的に呼ばれる)
+   user-&gt;&gt;PynqBNN: __del__()
+   PynqBNN-&gt;&gt;+main: deinit()
+   main-&gt;&gt;host: FoldedMVDeinit()
+   host-&gt;&gt;driver: deinitPlatform()
+   main--&gt;&gt;-PynqBNN: return
+        </div></div>
 
 
            </div>
@@ -215,6 +279,7 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

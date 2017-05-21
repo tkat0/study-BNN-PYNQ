@@ -1,0 +1,153 @@
+
+使われているpragma
+-----------------
+
+* #pragma HLS UNROLL
+    * MVTU内でPEを並列計算する部分の実装で利用
+
+
+Hardware Library
+=================
+
+BNN-PYNQのアクセラレータの実装の概要を記載。
+
+* AXI4-streamを用いて実装
+    * メモリ上の配列データとAXI4-Streamの相互変換API(dma.h)を定義
+    * DRAMとの接続、レイヤー間の接続は全て64bit幅のストリーム
+    * 各レイヤの入出力のI/FはAXI4-Stream
+    * 各レイヤーの内部は、レイヤーによって異なる
+        * StreamのBit幅を変換するAPIで変換する
+* PEの内部の演算は並列に実行する
+    * 並列の単位がSIMD幅
+    * 任意精度型で、SIMD幅bitの型を定義して演算している
+* Foldingについて
+    * 完全に並列化するのが理想だが、FPGAのリソースには制限がある
+    * そのため、リソース内で最大のハードウェアを用意して、使いまわす仕組み
+dma.h
+-----
+
+Streamでメモリ上のデータにアクセスするための関数
+
+* Mem2Stream
+    * メモリの配列データを逐次読んでstreamへ書き出す(PIPELINE)
+* Stream2Mem
+    * streamからデータを読んで、メモリ上の配列に書き込む(PIPELINE)
+* Mem2Stream_Batch
+* Stream2Mem_Batch
+
+matrixvector.h
+--------------
+
+* MVTUの実装
+* 定数テンプレートを使って、コンパイル時に静的なループになるようにしている
+* 入力をPEで並列計算する
+
+fclayer.h
+---------
+
+MVTUをつかう
+
+あくまでヘルパー関数で、インライン展開される
+
+MVTU等のAPIを使う
+
+ほとんど定数で実装されてる。なるほど…
+
+.. mermaid::
+
+   sequenceDiagram
+      participant top
+      participant fclayer
+      participant matrixvector
+
+      Note over top, fclayer: xxx
+      top->>fclayer: StreamingFCLayer_Batch()
+      fclayer->>matrixvector: StreamingDataWidthConverter_Batch()
+      fclayer->>matrixvector: StreamingMatrixVector_Batch()
+      fclayer->>matrixvector: StreamingDataWidthConverter_Batch()
+
+      top->>fclayer: StreamingFCLayer_NoActivation_Batch()
+      fclayer->>matrixvector: StreamingDataWidthConverter_Batch()
+      fclayer->>matrixvector: StreamingMatrixVector_NoActivation_Batch()
+      fclayer->>matrixvector: StreamingDataWidthConverter_Batch()
+
+convlayer.h
+-----------
+
+* MVTUをベースにして実現
+* Sliding Window Unit
+
+.. mermaid::
+
+   sequenceDiagram
+      participant top
+      participant convlayer
+      participant slidingwindow
+      participant matrixvector
+
+      Note over top: xxx
+      top->>convlayer: StreamingConvLayer_Batch()
+
+	  convlayer->>slidingwindow: StreamingConvolutionInputGenerator_Batch()
+      Note over convlayer: FCと同様にMVTUが処理できるよう、入力データのストリームを変形している
+
+      Note over top, convlayer: これ以降は、fclayerと同様のシーケンス
+
+	  convlayer->>matrixvector: StreamingDataWidthConverter_Batch()
+      Note over convlayer: from 64bit
+
+	  convlayer->>matrixvector: StreamingMatrixVector_Batch()
+
+	  convlayer->>matrixvector: StreamingDataWidthConverter_Batch()
+      Note over convlayer: to 64bit
+
+slidingwindow.h
+----------------
+
+* 入力ストリームの順番を変えて、出力ストリームに書き出す
+    * 元の入力 or パディング値を、内部バッファにコピー
+    * 内部バッファをFIFOで出力するではなく、インデクスを計算しそれに従い出力していく
+
+maxpool.h
+---------
+
+streamtools.h
+-------------
+
+高位合成前後のI/F
+-----------------
+
+Vivado HLSでC/C++を高位合成する際、関数のI/Fとアクセラレータのポートの対応は以下のようになっている
+
+演算の近似
+----------
+
+ビット演算で近似している箇所について記述
+
+* full binarization
+* Popcount for Accumulation
+* Batchnorm-activation as Threshold ( Sign(x) )
+* Boolean OR for Max pooling
+
+unit
+-----
+
+* MVTU(The Matrix–Vector–Threshold Unit)
+* Sliding Window Unit
+* Pooling unit
+
+MVTU(The Matrix–Vector–Threshold Unit)
+--------------------------------------
+
+* 重みはon-chip
+* データはoff-chipでRAM。ストリーム処理
+
+PE(Processing Element)
+----------------------
+
+図解したい
+
+AXI-stream
+----------
+
+プロトコルが単純で速いっぽい

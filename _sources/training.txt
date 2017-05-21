@@ -1,0 +1,66 @@
+学習方法
+========
+
+4.2に記載があるが、学習時（PC）と推論時（FPGA）でモデルを一部変える
+
+* 活性化関数を変える
+
+
+mnist-gen-binary-weight.py
+----------------------------
+
+theanoで学習したパラメータを、アクセラレータのPEのon-chipメモリに乗るフォーマットに変換する
+
+theanoのパラメータはnpzでダンプされる。これはfloat.
+これをバイナリに変換し、.binファイルを生成する
+
+* theanoで学習した重み(npz)を、finnthesizerで変換する
+    * convertFCNetwork関数
+        * convinient function
+    * 引数として、simdCountとpeCountを渡す
+        * Desnse4レイヤ分渡す
+* classes.txtも生成する。
+    * 行番号がインデクス、値がクラス名のテキスト
+
+.. mermaid::
+
+   sequenceDiagram
+      participant main
+      participant finnthesizer
+
+      %% __init__
+      Note over main, driver: ↓初期化。Overlayをロード
+      main->>finnthesizer: convertFCNetwork
+      finnthesizer->>finnthesizer: BNNWeightReader
+      Note over finnthesizer: numpyバイナリからデータを抽出する
+
+      loop 全レイヤー(4)
+          finnthesizer->>finnthesizer: (w,t) = r.readFCBNComplex()
+          Note over finnthesizer: FCとBNレイヤのweight, thretholdを読み込みバイナリ化
+          finnthesizer->>finnthesizer: m = BNNProcElemMem()
+          finnthesizer->>finnthesizer: m.addMatrix(w,t)
+          finnthesizer->>finnthesizer: m.createBinFiles()
+          Note over finnthesizer: PE単位でbinをダンプする
+
+      end
+
+
+binary_net.py
+---------------
+
+* np.savez()で全パラメータをダンプする
+
+LFC
+----
+
+lfc.pyによると学習時のモデル構成は、
+
+* 入力画像 28x28 グレースケール
+* Dropout
+* 隠れ層 3層
+    * Dense 1024次元
+    * BatchNorm
+    * Activation (binary_tanh_unit)
+    * Dropout
+* Dense (num_output [1, 64]<-何の制限なんだろう. MNISTでは10)
+* BatchNorm

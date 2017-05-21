@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ハードウェア実装 &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
+        <link rel="next" title="資料" href="links.html"/>
+        <link rel="prev" title="ハードウェア概要" href="hw.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> study-BNN-PYNQ
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ハードウェア実装</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">実装の特長</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-library">Hardware Library概要</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">study-BNN-PYNQ</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>ハードウェア実装</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/hw-implement.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>ハードウェア実装<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>実装の特長<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>静的、固定長な実装</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>定数（constや定数のテンプレート）を使い、関数内のループなど全て固定サイズ</dt>
+<dd><ul class="first last simple">
+<li>高位合成のテクニック</li>
+<li>Vivado 2017.1では可変ループ最適化が対応したらしいので、このような工夫をしなくても最適化される？？</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>テンプレートによる汎用化</dt>
+<dd><ul class="first last simple">
+<li>各レイヤーに特化した、静的な関数を効率よく実装する仕組み</li>
+<li>MVTUの関数定義は1箇所だが、テンプレートの変数を変えることでコンパイル時に静的な関数を複数生成できる</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>pragmaによる最適化</dt>
+<dd><ul class="first last simple">
+<li>ループの並列化や、C/C++上の配列をFPGAのどのリソースにあてるかなど指定</li>
+<li>（使われているpragmaと説明をあとでまとめる）</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Hardware Library</dt>
+<dd><ul class="first last simple">
+<li>BNNのアクセラレータの共通部品は、Hardware Libraryとして独立している</li>
+<li>LFC, CNVともに、Hardware Libraryを使ってモデルを記述する（高位合成ターゲットとなるTop関数だけ記述）</li>
+<li>ファイルは、 <code class="docutils literal"><span class="pre">bnn/src/hls</span></code> 以下</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="hardware-library">
+<h2>Hardware Library概要<a class="headerlink" href="#hardware-library" title="Permalink to this headline">¶</a></h2>
+<p>Hardware Libraryのファイル名と、その簡単な説明。</p>
+<ul>
+<li><p class="first">ファイルは、 <code class="docutils literal"><span class="pre">bnn/src/hls</span></code> 以下</p>
+</li>
+<li><dl class="first docutils">
+<dt>streamtools.h</dt>
+<dd><ul class="first last simple">
+<li>streamのBit幅変換APIなど</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>dma.h</dt>
+<dd><ul class="first last simple">
+<li>メモリ上の配列データとAXI4-Streamの相互変換API</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>matrixvector.h</dt>
+<dd><ul class="first last simple">
+<li>MVTUの実装</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>fclayer.h</dt>
+<dd><ul class="first last simple">
+<li>Fully Connectedレイヤー</li>
+<li>行列演算そのものはMVTUがおこなう</li>
+<li>MVTUの入出力を前後のレイヤーに合わせてbit幅変換する</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>convlayer.h</dt>
+<dd><ul class="first last simple">
+<li>Convolution Layerの実装</li>
+<li>slidingwindow.hで入力ストリームを変換し、MVTUへ入力する</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>maxpool.h</dt>
+<dd><ul class="first last simple">
+<li>MAX Poolingの実装</li>
+<li>入力を内部バッファにためて、そこでMax値を計算</li>
+<li>二値の最大値は、OR演算で得られる(0,1どちらかあれば1が最大なので)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>slidingwindow.h</dt>
+<dd><ul class="first last simple">
+<li>Convolutionを行列積で計算する（=MVTUで扱う）ために、入力画像を変換する</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="links.html" class="btn btn-neutral float-right" title="資料" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hw.html" class="btn btn-neutral" title="ハードウェア概要" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, tkato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

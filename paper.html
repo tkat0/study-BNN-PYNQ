@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>論文 &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> study-BNN-PYNQ
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">study-BNN-PYNQ</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>論文</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/paper.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>論文<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abst">
+<h2>abst<a class="headerlink" href="#abst" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>contributions</dt>
+<dd><ul class="first last simple">
+<li>roofline modelを使ってBNNのピーク性能を定量化した(3.1)</li>
+<li>Binarized Neural NetworksをFPGA向けに最適化</li>
+<li>カスタマイズできるBNNアーキテクチャ、ツール</li>
+<li>???</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>対応するレイヤー</dt>
+<dd><ul class="first last simple">
+<li>fully connected</li>
+<li>convolutional</li>
+<li>pooling</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>性能</dt>
+<dd><ul class="first last simple">
+<li>電力消費は、ZC706で25W以下</li>
+<li>12.3 million image / sec</li>
+<li>ベンチマークは、MNIST, SVHN, CIFAR-10</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>?<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">FINN: A Framework for Fast, Scalable Binarized Neural Network Inference</p>
+</li>
+<li><dl class="first docutils">
+<dt>flexible heterogeneout streaming architecture</dt>
+<dd><ul class="first last">
+<li><p class="first">トポロジに応じて変えられる</p>
+</li>
+<li><dl class="first docutils">
+<dt>レイヤー毎にcompute engineを持つ</dt>
+<dd><ul class="first last simple">
+<li>各エンジンは、前のエンジンの結果が出始めたらすぐに開始できる（ストリーム処理）これはFigure2を見るとわかりやすい</li>
+<li>全ての重みはon-chipメモリ上に保持することで、off-chipメモリへのアクセスを避けてレイテンシ（１画像あたりの処理時間）を減らす。！スループットではない点注意</li>
+<li>&#8220;one-size-fits-all&#8221;ではなく、リコンフィグラブルの利点を活かして、各レイヤに最適なcomupte engineを構築している</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>4.2<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Bengio氏のBinarynetをベースにしているぽい</dt>
+<dd><ul class="first last simple">
+<li>full binarization(入出力データから内部表現まですべて1bitで扱う)</li>
+<li>活性化関数の前にBatch Normalizationをする</li>
+<li>活性化関数は、0以上なら+1、そうでなければ-1</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>以下、元のBNNをFPGAで実装する上で最適化した方法について、各計算要素毎に述べている</p>
+</div>
+<div class="section" id="popcount">
+<h2>4.2.1 popcount<a class="headerlink" href="#popcount" title="Permalink to this headline">¶</a></h2>
+<p>binary dot products</p>
+<p>2値にすることで、popcountで計算できる
++1の入力のみカウントすることで、</p>
+</div>
+<div class="section" id="batchnorm">
+<h2>4.2.2 batchnorm<a class="headerlink" href="#batchnorm" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>[11]では、BNNレイヤーの後はbatch normalizationをする</li>
+<li>これと同じ計算結果を、閾値計算により得られるようにした</li>
+<li>コンパイル時に、Batch normalizationのパラメータを計算できる</li>
+</ul>
+</div>
+<div class="section" id="boolean-or-for-max-pooling">
+<h2>4.2.3 boolean OR for Max-pooling<a class="headerlink" href="#boolean-or-for-max-pooling" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>[5]では</li>
+</ul>
+</div>
+<div class="section" id="finn-design-flow">
+<h2>4.3 FINN Design Flow<a class="headerlink" href="#finn-design-flow" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FINN synthesizer</li>
+<li>FINN hardware library</li>
+</ul>
+</div>
+<div class="section" id="mvtu">
+<h2>4.3.1 MVTU<a class="headerlink" href="#mvtu" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="convolution">
+<h2>4.3.2 Convolution<a class="headerlink" href="#convolution" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Convolutionは行列と行列の掛け算にloweredできる</dt>
+<dd><ul class="first last">
+<li><p class="first">[3]参照</p>
+</li>
+<li><dl class="first docutils">
+<dt>im2col的な感じ？</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">chainer/utils/conv.py</span></code></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Sliding Windows Unit (SWU)で構成されている</p>
+</li>
+<li><dl class="first docutils">
+<dt>MVTUをつかう</dt>
+<dd><ul class="first last simple">
+<li>SIMD並列化するために、interleaveする（RAIDみたいな感じ）</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>interleave</dt>
+<dd><ul class="first last simple">
+<li>image matrix は on-the-fly</li>
+<li>weight matrix は コンパイル時</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="pooling-unit">
+<h2>4.3.3 pooling unit<a class="headerlink" href="#pooling-unit" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="folding">
+<h2>4.4 Folding<a class="headerlink" href="#folding" title="Permalink to this headline">¶</a></h2>
+<p>どうやら、リソースに応じたMVTUを複数個つくり、そこにデータを分ける方法ぽい？</p>
+<ul class="simple">
+<li>time-multiplex(of fold)</li>
+<li>[27] fpgaConvNet でNNをStreaming dataflowへfoldinfする方法</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>4.4.2<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>どうやってリソースのパラメータを決めるか</p>
+<p>どこか１つのレイヤーがボトルネックになると全体が遅くなるため、全てのレイヤーのサイクル数をだいたい同じにする</p>
+</div>
+<div class="section" id="id5">
+<h2>ここまでの理解度<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>PE, MVTU, Foldingの階層構造の理解が足りていない</li>
+<li>MVTUは行列とベクタの掛け算（FC）で、これを用いてConvolution（行列と行列の掛け算）を実現している？</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, tkato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>資料 &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  <title>ネットワーク &mdash; study-BNN-PYNQ 0.1 documentation</title>
   
 
   
@@ -32,8 +32,7 @@
   
 
   
-    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
-        <link rel="prev" title="ハードウェア実装" href="hw-implement.html"/> 
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -76,18 +75,14 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">資料</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#bnn-pynq">BNN-PYNQ</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pynq-z1">PYNQ-Z1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
 
             
@@ -118,11 +113,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>資料</li>
+    <li>ネットワーク</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/links.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/network.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,35 +128,33 @@
            <div itemprop="articleBody">
             
   <div class="section" id="id1">
-<h1>資料<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="bnn-pynq">
-<h2>BNN-PYNQ<a class="headerlink" href="#bnn-pynq" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ">https://github.com/Xilinx/BNN-PYNQ</a></li>
-<li>論文: <a class="reference external" href="https://arxiv.org/abs/1612.07119">https://arxiv.org/abs/1612.07119</a></li>
-</ul>
-</div>
-<div class="section" id="pynq-z1">
-<h2>PYNQ-Z1<a class="headerlink" href="#pynq-z1" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>プロジェクトページ <a class="reference external" href="http://www.pynq.io/">http://www.pynq.io/</a></li>
-<li>ドキュメント: <a class="reference external" href="http://pynq.readthedocs.io/en/latest/">http://pynq.readthedocs.io/en/latest/</a></li>
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/PYNQ/">https://github.com/Xilinx/PYNQ/</a></li>
-</ul>
-</div>
+<h1>ネットワーク<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>BNN-PYNQで現在動くモデルの構成を記載する</p>
+<div class="section" id="lfc">
+<h2>LFC<a class="headerlink" href="#lfc" title="Permalink to this headline">¶</a></h2>
+<script>mermaid.initialize({startOnLoad:true});</script><div class="mermaid">
+            graph TB
+    a(A)
+    b(B)
+    c(C)
+    a--&gt;b
+    a--&gt;c
+        </div></div>
+<div class="section" id="cnv">
+<h2>CNV<a class="headerlink" href="#cnv" title="Permalink to this headline">¶</a></h2>
+<div class="mermaid">
+            graph LR
+    A[Square Rect] -- Link text --&gt; B((Circle))
+    A --&gt; C(Round Rect)
+    B --&gt; D{Rhombus}
+    C --&gt; D
+        </div></div>
 </div>
 
 
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="hw-implement.html" class="btn btn-neutral" title="ハードウェア実装" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>

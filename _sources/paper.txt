@@ -1,0 +1,111 @@
+論文
+=====
+
+abst
+----
+
+* contributions
+    * roofline modelを使ってBNNのピーク性能を定量化した(3.1)
+    * Binarized Neural NetworksをFPGA向けに最適化
+    * カスタマイズできるBNNアーキテクチャ、ツール
+    * ???
+* 対応するレイヤー
+    * fully connected
+    * convolutional
+    * pooling
+* 性能
+    * 電力消費は、ZC706で25W以下
+    * 12.3 million image / sec
+    * ベンチマークは、MNIST, SVHN, CIFAR-10
+
+?
+----
+
+* FINN: A Framework for Fast, Scalable Binarized Neural Network Inference
+* flexible heterogeneout streaming architecture
+    * トポロジに応じて変えられる
+    * レイヤー毎にcompute engineを持つ
+        * 各エンジンは、前のエンジンの結果が出始めたらすぐに開始できる（ストリーム処理）これはFigure2を見るとわかりやすい
+        * 全ての重みはon-chipメモリ上に保持することで、off-chipメモリへのアクセスを避けてレイテンシ（１画像あたりの処理時間）を減らす。！スループットではない点注意
+        * "one-size-fits-all"ではなく、リコンフィグラブルの利点を活かして、各レイヤに最適なcomupte engineを構築している
+
+4.2
+---
+
+* Bengio氏のBinarynetをベースにしているぽい
+    * full binarization(入出力データから内部表現まですべて1bitで扱う)
+    * 活性化関数の前にBatch Normalizationをする
+    * 活性化関数は、0以上なら+1、そうでなければ-1
+
+以下、元のBNNをFPGAで実装する上で最適化した方法について、各計算要素毎に述べている
+
+4.2.1 popcount
+----------------
+
+binary dot products
+
+2値にすることで、popcountで計算できる
++1の入力のみカウントすることで、
+
+
+4.2.2 batchnorm
+-------------------
+
+* [11]では、BNNレイヤーの後はbatch normalizationをする
+* これと同じ計算結果を、閾値計算により得られるようにした
+* コンパイル時に、Batch normalizationのパラメータを計算できる
+
+4.2.3 boolean OR for Max-pooling
+----------------------------------
+
+* [5]では
+
+
+4.3 FINN Design Flow
+----------------------
+
+* FINN synthesizer
+* FINN hardware library
+
+4.3.1 MVTU
+-----------
+
+4.3.2 Convolution
+------------------
+
+* Convolutionは行列と行列の掛け算にloweredできる
+    * [3]参照
+    * im2col的な感じ？
+        * ``chainer/utils/conv.py``
+* Sliding Windows Unit (SWU)で構成されている
+* MVTUをつかう
+    * SIMD並列化するために、interleaveする（RAIDみたいな感じ）
+* interleave
+    * image matrix は on-the-fly
+    * weight matrix は コンパイル時
+
+4.3.3 pooling unit
+----------------------
+
+4.4 Folding
+--------------
+
+どうやら、リソースに応じたMVTUを複数個つくり、そこにデータを分ける方法ぽい？
+
+* time-multiplex(of fold)
+* [27] fpgaConvNet でNNをStreaming dataflowへfoldinfする方法
+
+
+4.4.2
+----------
+
+どうやってリソースのパラメータを決めるか
+
+どこか１つのレイヤーがボトルネックになると全体が遅くなるため、全てのレイヤーのサイクル数をだいたい同じにする
+
+
+ここまでの理解度
+--------------
+
+* PE, MVTU, Foldingの階層構造の理解が足りていない
+* MVTUは行列とベクタの掛け算（FC）で、これを用いてConvolution（行列と行列の掛け算）を実現している？

@@ -79,7 +79,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
 <li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
 
@@ -128,8 +131,21 @@
   <div class="section" id="study-bnn-pynq">
 <h1>study-BNN-PYNQ<a class="headerlink" href="#study-bnn-pynq" title="Permalink to this headline">¶</a></h1>
 <p>BNN-PYNQについて調べた内容をまとめます。</p>
-<p>BNN-PYNQは、ホビーFPGAボード&#8221;PYNQ(ピンク)&#8221;で動作するNeuralNetworkのシステムです。</p>
-<p>Pythonのアプリケーション層、Cのドライバ、高位合成用の実装まで、ほとんどのコードが公開されているためDeepLearningのアルゴリズムをFPGAで動かすことを学ぶには良い素材です。</p>
+<p>主な読み手として、ハードウェアや高位合成に詳しくない、ソフトウェア側の方を意識しています。</p>
+<ul>
+<li><p class="first">BNN-PYNQは、ホビーFPGAボード&#8221;PYNQ(ピンク)&#8221;で動作するNeuralNetworkのシステムです</p>
+</li>
+<li><dl class="first docutils">
+<dt>DeepLearningのアルゴリズムをFPGAで動かすことを学ぶには良い素材です</dt>
+<dd><ul class="first last simple">
+<li>論文が公開</li>
+<li>Pythonのアプリケーション層、Cのドライバ、高位合成用の実装が公開</li>
+<li>学習コードの一部が公開</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 <div class="social-buttons">
     <div class="social-button-item">
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://tkat0.github.io/doc-BNN-PYNQ/" data-via="_tkato_">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -164,7 +180,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hw-implement.html#id2">実装の特長</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw-implement.html#hardware-library">Hardware Library概要</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="links.html">資料</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="links.html#bnn-pynq">BNN-PYNQ</a></li>
 <li class="toctree-l2"><a class="reference internal" href="links.html#pynq-z1">PYNQ-Z1</a></li>
@@ -188,6 +211,16 @@
 <h2>Change log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><dl class="first docutils">
+<dt>2017/05/11</dt>
+<dd><ul class="first last simple">
+<li>ハードウェア概要、ハードウェア実装を追加</li>
+<li>ソフトウェアのシーケンスを追加</li>
+<li>Todo追加</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
 <dt>2017/05/04</dt>
 <dd><ul class="first last simple">
 <li>ソフトウェア全体像を追加</li>
@@ -201,6 +234,37 @@
 <dd><ul class="first last simple">
 <li>新規作成(ブログ記事を元に作成)</li>
 <li>FAQを追加</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="todo">
+<h2>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
+<p>今後書く予定の内容</p>
+<ul>
+<li><p class="first">Binarized Neural Networkの説明</p>
+</li>
+<li><p class="first">LFC, CNVの構成、特長</p>
+</li>
+<li><dl class="first docutils">
+<dt>HW</dt>
+<dd><ul class="first last simple">
+<li>レジスタマップ</li>
+<li>MVTUのデータフロー詳細</li>
+<li>FCとConvolutionでMVTUをどう使っているのか</li>
+<li>MVTUのコンパイル時のパラメータの決め方</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>学習ツールや学習のシーケンス</dt>
+<dd><ul class="first last simple">
+<li>モデルデータのバイナリフォーマット</li>
+<li>任意のデータで学習するには</li>
+<li>任意のモデルを構築して学習してみる</li>
 </ul>
 </dd>
 </dl>
@@ -274,6 +338,7 @@ ga('send', 'pageview');
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

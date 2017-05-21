@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>資料 &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  <title>ハードウェア概要 &mdash; study-BNN-PYNQ 0.1 documentation</title>
   
 
   
@@ -33,7 +33,8 @@
 
   
     <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
-        <link rel="prev" title="ハードウェア実装" href="hw-implement.html"/> 
+        <link rel="next" title="ハードウェア実装" href="hw-implement.html"/>
+        <link rel="prev" title="ファイル構成" href="tree.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -81,13 +82,9 @@
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ハードウェア概要</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">資料</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#bnn-pynq">BNN-PYNQ</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pynq-z1">PYNQ-Z1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
 
             
@@ -118,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>資料</li>
+    <li>ハードウェア概要</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/links.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/hw.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,22 +130,62 @@
            <div itemprop="articleBody">
             
   <div class="section" id="id1">
-<h1>資料<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="bnn-pynq">
-<h2>BNN-PYNQ<a class="headerlink" href="#bnn-pynq" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ">https://github.com/Xilinx/BNN-PYNQ</a></li>
-<li>論文: <a class="reference external" href="https://arxiv.org/abs/1612.07119">https://arxiv.org/abs/1612.07119</a></li>
+<h1>ハードウェア概要<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>BNN-PYNQのアクセラレータの概要を記載する</p>
+<ul>
+<li><p class="first">BNN-PYNQのアクセラレータは、C++のコードからVivado HLSで高位合成で生成</p>
+</li>
+<li><p class="first">学習済みの重みは、全てon-chip（モデルの初期化時にロードする）</p>
+</li>
+<li><dl class="first docutils">
+<dt>アクセラレータへの入出力データはストリーム処理(AXI4-Stream)</dt>
+<dd><ul class="first last simple">
+<li>DRAMとの接続、レイヤー間の接続は全て64bit幅のストリーム</li>
+<li>各レイヤの入出力のI/FはAXI4-Stream</li>
 </ul>
-</div>
-<div class="section" id="pynq-z1">
-<h2>PYNQ-Z1<a class="headerlink" href="#pynq-z1" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>プロジェクトページ <a class="reference external" href="http://www.pynq.io/">http://www.pynq.io/</a></li>
-<li>ドキュメント: <a class="reference external" href="http://pynq.readthedocs.io/en/latest/">http://pynq.readthedocs.io/en/latest/</a></li>
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/PYNQ/">https://github.com/Xilinx/PYNQ/</a></li>
+</dd>
+</dl>
+</li>
+<li><p class="first">Binarized Neural NetworkをFPGA最適化するために、計算をビット演算等で近似している</p>
+</li>
+<li><dl class="first docutils">
+<dt>アクセラレータのコアは、行列xベクトルを計算するMVTUというユニット</dt>
+<dd><ul class="first last">
+<li><p class="first">Fully ConnectedレイヤーもConvolutionレイヤーも、内部ではMVTUを使う</p>
+</li>
+<li><dl class="first docutils">
+<dt>レイヤー毎に最適化されたMVTUを持つ</dt>
+<dd><ul class="first last">
+<li><p class="first">MTVUは、内部に複数のPE（Processing Element）をもつ</p>
+</li>
+<li><p class="first">PEは、ビット演算を並列化できる（SIMD）</p>
+</li>
+<li><dl class="first docutils">
+<dt>MVTUは、PEの数とPE内の並列度（SIMD幅）を高位合成時に変更できる</dt>
+<dd><ul class="first last simple">
+<li>レイヤー毎に最適化することで、モデル全体のボトルネックをなくしてレイテンシを少なくする</li>
 </ul>
-</div>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Folding</dt>
+<dd><ul class="first last simple">
+<li>完全に並列化するのが理想だが、FPGAのリソースには制限がある</li>
+<li>そのため、リソース内で最大のハードウェアを用意して、使いまわす仕組み</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 
 
@@ -158,8 +195,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="hw-implement.html" class="btn btn-neutral float-right" title="ハードウェア実装" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="hw-implement.html" class="btn btn-neutral" title="ハードウェア実装" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="tree.html" class="btn btn-neutral" title="ファイル構成" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

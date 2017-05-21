@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>資料 &mdash; study-BNN-PYNQ 0.1 documentation</title>
+  <title>学習方法 &mdash; study-BNN-PYNQ 0.1 documentation</title>
   
 
   
@@ -32,8 +32,7 @@
   
 
   
-    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/>
-        <link rel="prev" title="ハードウェア実装" href="hw-implement.html"/> 
+    <link rel="top" title="study-BNN-PYNQ 0.1 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -76,18 +75,14 @@
             
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html">ソフトウェア全体像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soft-overview.html#id2">ソフトウェアシーケンス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree.html">ファイル構成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hw.html">ハードウェア概要</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hw-implement.html">ハードウェア実装</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">資料</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#bnn-pynq">BNN-PYNQ</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pynq-z1">PYNQ-Z1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">資料</a></li>
 </ul>
 
             
@@ -118,11 +113,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>資料</li>
+    <li>学習方法</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/links.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/training.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,20 +128,99 @@
            <div itemprop="articleBody">
             
   <div class="section" id="id1">
-<h1>資料<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="bnn-pynq">
-<h2>BNN-PYNQ<a class="headerlink" href="#bnn-pynq" title="Permalink to this headline">¶</a></h2>
+<h1>学習方法<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>4.2に記載があるが、学習時（PC）と推論時（FPGA）でモデルを一部変える</p>
 <ul class="simple">
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/BNN-PYNQ">https://github.com/Xilinx/BNN-PYNQ</a></li>
-<li>論文: <a class="reference external" href="https://arxiv.org/abs/1612.07119">https://arxiv.org/abs/1612.07119</a></li>
+<li>活性化関数を変える</li>
+</ul>
+<div class="section" id="mnist-gen-binary-weight-py">
+<h2>mnist-gen-binary-weight.py<a class="headerlink" href="#mnist-gen-binary-weight-py" title="Permalink to this headline">¶</a></h2>
+<p>theanoで学習したパラメータを、アクセラレータのPEのon-chipメモリに乗るフォーマットに変換する</p>
+<p>theanoのパラメータはnpzでダンプされる。これはfloat.
+これをバイナリに変換し、.binファイルを生成する</p>
+<ul>
+<li><dl class="first docutils">
+<dt>theanoで学習した重み(npz)を、finnthesizerで変換する</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>convertFCNetwork関数</dt>
+<dd><ul class="first last simple">
+<li>convinient function</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>引数として、simdCountとpeCountを渡す</dt>
+<dd><ul class="first last simple">
+<li>Desnse4レイヤ分渡す</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>classes.txtも生成する。</dt>
+<dd><ul class="first last simple">
+<li>行番号がインデクス、値がクラス名のテキスト</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<script>mermaid.initialize({startOnLoad:true});</script><div class="mermaid">
+            sequenceDiagram
+   participant main
+   participant finnthesizer
+
+   %% __init__
+   Note over main, driver: ↓初期化。Overlayをロード
+   main-&gt;&gt;finnthesizer: convertFCNetwork
+   finnthesizer-&gt;&gt;finnthesizer: BNNWeightReader
+   Note over finnthesizer: numpyバイナリからデータを抽出する
+
+   loop 全レイヤー(4)
+       finnthesizer-&gt;&gt;finnthesizer: (w,t) = r.readFCBNComplex()
+       Note over finnthesizer: FCとBNレイヤのweight, thretholdを読み込みバイナリ化
+       finnthesizer-&gt;&gt;finnthesizer: m = BNNProcElemMem()
+       finnthesizer-&gt;&gt;finnthesizer: m.addMatrix(w,t)
+       finnthesizer-&gt;&gt;finnthesizer: m.createBinFiles()
+       Note over finnthesizer: PE単位でbinをダンプする
+
+   end
+        </div></div>
+<div class="section" id="binary-net-py">
+<h2>binary_net.py<a class="headerlink" href="#binary-net-py" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>np.savez()で全パラメータをダンプする</li>
 </ul>
 </div>
-<div class="section" id="pynq-z1">
-<h2>PYNQ-Z1<a class="headerlink" href="#pynq-z1" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>プロジェクトページ <a class="reference external" href="http://www.pynq.io/">http://www.pynq.io/</a></li>
-<li>ドキュメント: <a class="reference external" href="http://pynq.readthedocs.io/en/latest/">http://pynq.readthedocs.io/en/latest/</a></li>
-<li>ソースコード: <a class="reference external" href="https://github.com/Xilinx/PYNQ/">https://github.com/Xilinx/PYNQ/</a></li>
+<div class="section" id="lfc">
+<h2>LFC<a class="headerlink" href="#lfc" title="Permalink to this headline">¶</a></h2>
+<p>lfc.pyによると学習時のモデル構成は、</p>
+<ul>
+<li><p class="first">入力画像 28x28 グレースケール</p>
+</li>
+<li><p class="first">Dropout</p>
+</li>
+<li><dl class="first docutils">
+<dt>隠れ層 3層</dt>
+<dd><ul class="first last simple">
+<li>Dense 1024次元</li>
+<li>BatchNorm</li>
+<li>Activation (binary_tanh_unit)</li>
+<li>Dropout</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Dense (num_output [1, 64]&lt;-何の制限なんだろう. MNISTでは10)</p>
+</li>
+<li><p class="first">BatchNorm</p>
+</li>
 </ul>
 </div>
 </div>
@@ -155,13 +229,6 @@
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="hw-implement.html" class="btn btn-neutral" title="ハードウェア実装" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
